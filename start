@@ -1,0 +1,3 @@
+fab deploy:ym
+docker run -d -p 8000:8000 --name backend_django 865660758646.dkr.ecr.ap-northeast-2.amazonaws.com/site-recsys/django:latest
+docker run -d -p 80:80  --name backend_nginx 865660758646.dkr.ecr.ap-northeast-2.amazonaws.com/site-recsys/nginx:latest 

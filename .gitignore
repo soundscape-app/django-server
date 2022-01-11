@@ -1,0 +1,17 @@
+.idea/
+.DS_Store
+__pycache__/
+.eslintcache
+
+# django
+venv/
+.env
+static/
+
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+*.mp4
