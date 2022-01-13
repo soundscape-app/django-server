@@ -4,4 +4,8 @@
 python manage.py collectstatic --noinput
 python manage.py migrate
 
-exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+exec gunicorn backend.wsgi:application \
+--workers $NUM_WORKERS \
+--timeout $TIMEOUT \
+--bind 0.0.0.0:8000
+--log-level=debug \
