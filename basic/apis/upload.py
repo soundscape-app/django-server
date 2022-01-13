@@ -17,8 +17,8 @@ class UploadViewSet(viewsets.ViewSet):
         data = request.data
         
         video = data.get('video')
-        revisitation = float(data.get('revisitation'))
-        loudness = float(data.get('loudness'))
+        revisitation = float(data.get('revisitation', 0))
+        loudness = float(data.get('loudness', 0))
         
         if not video:
             return Response({"message": "Video is required"}, status=status.HTTP_400_BAD_REQUEST)
