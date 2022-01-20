@@ -19,6 +19,7 @@ class UploadViewSet(viewsets.ViewSet):
         video = data.get('video')
         revisitation = float(data.get('revisitation', 0))
         loudness = float(data.get('loudness', 0))
+        device = str(data.get('device', 'unknown'))
         
         if not video:
             return Response({"message": "Video is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -26,7 +27,8 @@ class UploadViewSet(viewsets.ViewSet):
         video_result = VideoResult.objects.create(
             video=video,
             revisitation=revisitation,
-            loudness=loudness
+            loudness=loudness,
+            device=device,
         )
         video_result.status = 'uploaded'
         video_result.save()
@@ -35,6 +37,7 @@ class UploadViewSet(viewsets.ViewSet):
         res['video_id'] = video_result.video_id
         res['revisitation'] = revisitation
         res['loudness'] = loudness
+        res['device'] = device
         res['uploaded_at'] = video_result.created_datetime
 
         return Response(res, status=status.HTTP_200_OK)

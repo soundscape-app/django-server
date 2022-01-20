@@ -48,7 +48,7 @@ def loudness(data):
 
 def revisitation(data):
     CF = {
-        'lceq_aeq': -0.063,
+        'lceq-laeq': -0.063,
         'sky_ratio': 0.019,
         'n_ppl': 0.012,
         'n_vhcl': -0.008,
@@ -61,7 +61,7 @@ def revisitation(data):
 def predict(data):
     CF = {
         'laeq': 0.051,
-        'lceq_aeq': -0.166,
+        'lceq-laeq': -0.166,
         'green_ratio': 0.058,
         'n_ppl': -0.031,
         'n_vhcl': -0.018,
@@ -97,15 +97,22 @@ class ProcessViewSet(viewsets.ViewSet):
         
         data = dict()
         
+        # Divice
+        data['device'] = video.device
+        if video.device and video.device.startswith('Apple'):
+            pass
+            # TODO: 오디오 파일 분석 후 조정 필요
+        
         # Luminance
         data['r'] = proc_data['rgb_info']['r']['avg']
         data['g'] = proc_data['rgb_info']['g']['avg']
         data['b'] = proc_data['rgb_info']['b']['avg']
         data['luminance'] = luminance(data)
         
-        # Sound Info TODO: laeq, lceq-aeq 는 이게 맞는지
-        data['laeq'] = (proc_data['audio']['lceq'] - proc_data['audio']['lceq-laeq'])
-        data['lceq_aeq'] = proc_data['audio']['lceq-laeq']
+        # Sound Info
+        data['lceq'] = proc_data['audio']['leq']
+        data['laeq'] = proc_data['audio']['laeq']
+        data['lceq-laeq'] = proc_data['audio']['lceq-laeq']
         
         # Image Segmentation TODO: grey ratio 는 이게 맞는지
         data['sky_ratio'] = proc_data['segment']['Sky']

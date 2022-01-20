@@ -22,6 +22,7 @@ class VideoResult(TimeStampedModel):
     )
     loudness = models.FloatField(blank=True, null=True)
     revisitation = models.FloatField(blank=True, null=True)
+    device = models.CharField(max_length=200, blank=True, null=True)
     
     status = models.CharField(max_length=30, default='ready')
     json_data = models.TextField(default=None, null=True)
