@@ -16,19 +16,25 @@ from rest_framework import routers
 
 from basic.apis.upload import UploadViewSet
 from basic.apis.process import ProcessViewSet
+from basic.apis.auth import AuthViewSet
+from basic.apis.user import UserViewSet
 
 # from backend.apis.auth import AuthLoginAPI
 
 router = routers.SimpleRouter(trailing_slash=False)
 router.register('upload', UploadViewSet, basename='upload')
 router.register('process', ProcessViewSet, basename='process')
+router.register('auth', AuthViewSet, basename='auth')
+router.register('user', UserViewSet, basename='user')
 
 # router.register('api/products', ProductViewSet, basename='product')
 # router.register('api/draw_events', DrawEventViewSet, basename='draw_event')
 # router.register('api/search', SearchViewSet, basename='search')
 
 urlpatterns = [
-    path('auth/', obtain_auth_token),
+    # path('auth', AuthViewSet.as_view()),
+    # path('auth/refresh', token_refresh),
+    # path('auth/register', auth_register),
 ] + router.urls
 
 # urlpatterns = [

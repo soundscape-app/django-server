@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from basic.models.user import User, TCI_RS, UserSurvey
+from basic.models.profile import Profile, TCI_RS, UserSurvey
 from basic.models.site import Site, SiteAnalysis
 from basic.models.prediction import Prediction, SiteSurvey
 from basic.models.media import Image, VideoResult

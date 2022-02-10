@@ -1,6 +1,6 @@
 from django.db import models
 
-from basic.models.user import User
+from basic.models.profile import Profile
 from basic.models.site import Site
 
 
@@ -12,7 +12,7 @@ class SiteSurvey(models.Model):
 
 class Prediction(models.Model):
     site_id = models.ForeignKey(Site, on_delete=models.CASCADE, null=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     site_survey_id = models.ForeignKey(SiteSurvey, on_delete=models.CASCADE, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
