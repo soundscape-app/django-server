@@ -17,7 +17,7 @@ def proc(audio):
     res = json.loads(''.join(response.content.decode('utf-8')))
     return res
 
-class UploadViewSet(viewsets.ViewSet):
+class CoughUploadViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
 
     @action(detail=False, methods=['POST'])

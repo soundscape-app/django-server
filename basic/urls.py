@@ -18,11 +18,13 @@ from basic.apis.upload import UploadViewSet
 from basic.apis.process import ProcessViewSet
 from basic.apis.auth import AuthViewSet
 from basic.apis.user import UserViewSet
+from basic.apis.cough import CoughUploadViewSet
 
 # from backend.apis.auth import AuthLoginAPI
 
 router = routers.SimpleRouter(trailing_slash=False)
 router.register('upload', UploadViewSet, basename='upload')
+router.register('cough', CoughUploadViewSet, basename='cough')
 router.register('process', ProcessViewSet, basename='process')
 router.register('auth', AuthViewSet, basename='auth')
 router.register('user', UserViewSet, basename='user')

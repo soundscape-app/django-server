@@ -19,7 +19,7 @@ from cough.apis.upload import UploadViewSet
 # from backend.apis.auth import AuthLoginAPI
 
 router = routers.SimpleRouter(trailing_slash=False)
-router.register('upload', UploadViewSet, basename='upload')
+router.register('cough/upload', UploadViewSet, basename='upload')
 # router.register('product_categories', ProductCategoryViewSet, basename='product_categories')
 
 # router = routers.SimpleRouter(trailing_slash=False)

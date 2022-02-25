@@ -1,6 +1,9 @@
+import json
+
 from django.db import models
 from django.utils import timezone
 from django.core.validators import FileExtensionValidator
+from django.contrib.auth.models import User
 
 from backend.models import TimeStampedModel
 
@@ -28,5 +31,8 @@ class VideoResult(TimeStampedModel):
     json_data = models.TextField(default=None, null=True)
     
     prediction = models.FloatField(default=None, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     
-    uploaded_by = models.CharField(max_length=64, default='', null=True)
+    # @property
+    # def json_dict(self):
+    #     return json.loads(self.json_data)

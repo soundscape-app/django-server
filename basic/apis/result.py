@@ -16,68 +16,27 @@ import requests
 import json
 import math
 
-# def get_prediction_data(video):
-
-def proc(video):
-    URL = 'http://api-server-1507785389.ap-northeast-2.elb.amazonaws.com:4040/process'
-    response = requests.post(URL, files={'video': video.video.file})
-    res = json.loads(''.join(response.content.decode('utf-8')))
-    return res
-
-def luminance(data):
-    CF = {
-        'r': 0.299,
-        'g': 0.587,
-        'b': 0.114,
-    }
-    CONST = 0
-    result = sum([CF[key] * data[key] for key in CF.keys()]) + CONST
-    return result
-
-def loudness(data):
-    CF = {
-        'laeq': 0.091,
-        'sky_ratio': -0.044,
-        'luminance': 0.014,
-        'n_ppl': -0.019,
-        'n_vhcl': 0.007,
-        'grey_ratio': 0.012,
-    }
-    CONST = -4.686
-    result = sum([CF[key] * data[key] for key in CF.keys()]) + CONST
-    return result
-
-def revisitation(data):
-    CF = {
-        'lceq-laeq': -0.063,
-        'sky_ratio': 0.019,
-        'n_ppl': 0.012,
-        'n_vhcl': -0.008,
-        'grey_ratio': -0.023,
-    }
-    CONST = 3.931
-    result = sum([CF[key] * data[key] for key in CF.keys()]) + CONST
-    return result
-
-def predict(data):
-    CF = {
-        'laeq': 0.051,
-        'lceq-laeq': -0.166,
-        'green_ratio': 0.058,
-        'n_ppl': -0.031,
-        'n_vhcl': -0.018,
-        'loudness': -0.57,
-        'revisitation': 0.815,
-    }
-    CONST = -1.568
-    
-    result = sum([CF[key] * data[key] for key in CF.keys()]) + CONST
-    exp_result = math.exp(result)
-    percent = exp_result / (1 + exp_result)
-    return percent
-
-class ProcessViewSet(viewsets.ViewSet):
+class ResultViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
+    
+    @method_decorator(parse_header())
+    def retrieve(self, request, *args, **kwargs):
+        video_id = kwargs['pk']
+        
+        user = None
+        if request.user:
+            user = request.user
+        
+        # try:
+        #     style_collection = CollectionMirror.objects.get(id=reketer_style_id)
+        #     data = reketer_style_serializer(
+        #         style_collection,
+        #         clayful_customer_id=clayful_customer_id,
+        #     )
+        #     return Response(data, status=status.HTTP_200_OK)
+        # except CollectionMirror.DoesNotExist:
+        #     return Response(status=status.HTTP_404_NOT_FOUND)
+        
 
     @action(detail=False, methods=['GET'])
     def video(self, request, *args, **kwargs):

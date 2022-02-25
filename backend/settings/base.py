@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'basic.apps.BasicConfig',
+    'cough.apps.CoughConfig',
     # 'storages',
     'rest_framework.authtoken',
 ]
