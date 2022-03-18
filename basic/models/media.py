@@ -26,6 +26,7 @@ class VideoResult(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     
     survey = models.JSONField(default=None, null=True)
+    scape_name = models.CharField(max_length=100, default=None, null=True)
     
     # @property
     # def json_dict(self):

@@ -37,6 +37,7 @@ class UploadViewSet(viewsets.ViewSet):
         loudness = float(data.get('loudness', 0))
         device = str(data.get('device', 'unknown'))
         survey = json.loads(data.get('survey','{}'))
+        scape_name = str(survey.get('name', '(none)'))
         
         if not video:
             return Response({"message": "Video is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -48,6 +49,7 @@ class UploadViewSet(viewsets.ViewSet):
             device=device,
             user=user,
             survey=survey,
+            scape_name=scape_name,
         )
         video_result.status = 'uploaded'
         video_result.save()
