@@ -50,7 +50,12 @@ class ResultViewSet(viewsets.ViewSet):
         if request.user:
             user = request.user
         
-        videos = VideoResult.objects.filter(user=user).order_by('-created_datetime')
+        videos = VideoResult.objects.filter(user_id=user.id).order_by('-created_datetime')
+        
+        obj = VideoResult.objects.get(id=64)
+        obj.user = user
+        obj.save()
+        
         results = []
         for video in videos:
             results.append(result_serializer(video))
