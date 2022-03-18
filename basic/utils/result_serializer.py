@@ -16,6 +16,7 @@ import math
 def result_serializer(video):
     results = dict()
     results['video_id'] = video.video_id
+    results['scape_name'] = video.scape_name
     results['prediction'] = video.prediction
     results['revisitation'] = video.revisitation
     results['loudness'] = video.loudness
