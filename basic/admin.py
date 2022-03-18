@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from basic.models.profile import Profile, TCI_RS, UserSurvey
-from basic.models.site import Site, SiteAnalysis
-from basic.models.prediction import Prediction, SiteSurvey
-from basic.models.media import Image, VideoResult
+# from basic.models.profile import Profile, TCI_RS, UserSurvey
+# from basic.models.site import Site, SiteAnalysis
+# from basic.models.prediction import Prediction, SiteSurvey
+from basic.models.media import VideoResult
 
 # User
 # admin.site.register(User)

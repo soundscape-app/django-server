@@ -7,14 +7,6 @@ from django.contrib.auth.models import User
 
 from backend.models import TimeStampedModel
 
-class Image(models.Model):
-    title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images/',blank=True, null=True)
-    date_uploaded = models.DateTimeField(default=timezone.now())
-    
-    def __str__(self):
-        return self.title
-
 class VideoResult(TimeStampedModel):
     video_id = models.AutoField(primary_key=True, db_index=True)
     # title = models.CharField(max_length=200, blank=True, null=True)
