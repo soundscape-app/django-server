@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timedelta
+import json
 
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, authentication_classes, permission_classes
@@ -35,7 +36,7 @@ class UploadViewSet(viewsets.ViewSet):
         revisitation = float(data.get('revisitation', 0))
         loudness = float(data.get('loudness', 0))
         device = str(data.get('device', 'unknown'))
-        survey = data.get('survey')
+        survey = json.loads(data.get('survey','{}'))
         
         if not video:
             return Response({"message": "Video is required"}, status=status.HTTP_400_BAD_REQUEST)

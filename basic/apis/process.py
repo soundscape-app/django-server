@@ -93,6 +93,8 @@ class ProcessViewSet(viewsets.ViewSet):
         video_id = request.query_params.get('video_id', None)
         redo = request.query_params.get('redo', False)
         video = VideoResult.objects.get(video_id=video_id)
+        if video.user != user:
+            return Response({'details': 'Invalid user'}, status=status.HTTP_400_BAD_REQUEST)
         video.status = 'processing';
         video.save()
         

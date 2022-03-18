@@ -29,20 +29,13 @@ class ResultViewSet(viewsets.ViewSet):
         user = None
         if request.user:
             user = request.user
+            
+        video = VideoResult.objects.filter(video_id=video_id).first()
+        if not video:
+            return Response({"message": "Video is not found"}, status=status.HTTP_404_NOT_FOUND)
         
-        
-        
-        
-        # try:
-        #     style_collection = CollectionMirror.objects.get(id=reketer_style_id)
-        #     data = reketer_style_serializer(
-        #         style_collection,
-        #         clayful_customer_id=clayful_customer_id,
-        #     )
-        #     return Response(data, status=status.HTTP_200_OK)
-        # except CollectionMirror.DoesNotExist:
-        #     return Response(status=status.HTTP_404_NOT_FOUND)
-    
+        result = result_serializer(video)
+        return Response(result, status=status.HTTP_200_OK)
 
     @method_decorator(parse_header())
     def list(self, request, *args, **kwargs):
