@@ -12,9 +12,12 @@ from django.utils.decorators import method_decorator
 from rest_framework import viewsets, status
 
 from basic.utils.validator import is_valid_password
+from basic.models import Profile
+from basic.utils.serializer import profile_serializer
 
 from backend.decorators import parse_header
 
+@permission_classes((AllowAny,))
 class UserViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
 
@@ -23,9 +26,14 @@ class UserViewSet(viewsets.ViewSet):
     def profile(self, request, *args, **kwargs):
         """사용자 정보"""
 
-        user = request.data.get('user', None)
+        user = request.user
+        if not user:
+            return Response({ 'details': 'Invalid user' }, status=status.HTTP_400_BAD_REQUEST)
         
-        return Response(str(request.META), status=status.HTTP_200_OK)
+        profile, created = Profile.objects.get_or_create(user=user, name=user.username)
+        data = profile_serializer(profile)
+        
+        return Response(data, status=status.HTTP_200_OK)
         
         password = request.data.get('password', None)
 

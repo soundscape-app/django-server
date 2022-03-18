@@ -20,6 +20,7 @@ class Profile(models.Model):
     # pw_hash = models.CharField(help_text="PW Hash", max_length=64, blank=False, null=True)
     # name = models.CharField(help_text="Name", max_length=256, blank=False, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(help_text="Name", max_length=64, blank=False, null=True)
     gender = models.CharField(help_text="Gender", max_length=32, blank=False, null=True)
     age = models.IntegerField(help_text="Age", blank=False, null=True)
 

@@ -19,6 +19,7 @@ from basic.apis.process import ProcessViewSet
 from basic.apis.auth import AuthViewSet
 from basic.apis.user import UserViewSet
 from basic.apis.cough import CoughUploadViewSet
+from basic.apis.result import ResultViewSet
 
 # from backend.apis.auth import AuthLoginAPI
 
@@ -28,6 +29,7 @@ router.register('cough', CoughUploadViewSet, basename='cough')
 router.register('process', ProcessViewSet, basename='process')
 router.register('auth', AuthViewSet, basename='auth')
 router.register('user', UserViewSet, basename='user')
+router.register('result', ResultViewSet, basename='result')
 
 # router.register('api/products', ProductViewSet, basename='product')
 # router.register('api/draw_events', DrawEventViewSet, basename='draw_event')

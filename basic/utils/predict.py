@@ -73,6 +73,7 @@ def predict(data):
     percent = exp_result / (1 + exp_result)
     return percent
 
+
 class ProcessViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
 

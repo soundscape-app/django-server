@@ -1,7 +1,8 @@
 import logging
 from datetime import datetime, timedelta
 
-from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -76,12 +77,18 @@ def predict(data):
     percent = exp_result / (1 + exp_result)
     return percent
 
+
+@permission_classes((AllowAny,))
 class ProcessViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
 
     @action(detail=False, methods=['GET'])
     def video(self, request, *args, **kwargs):
         """video id로 요청하면 결과 가져옴"""
+        
+        user = request.user
+        if not user:
+            return Response({'details': 'Invalid user'}, status=status.HTTP_400_BAD_REQUEST)
         
         video_id = request.query_params.get('video_id', None)
         redo = request.query_params.get('redo', False)

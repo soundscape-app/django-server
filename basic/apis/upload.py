@@ -1,7 +1,8 @@
 import logging
 from datetime import datetime, timedelta
 
-from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action, authentication_classes, permission_classes
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets, status
@@ -10,6 +11,8 @@ from basic.models.prediction import Prediction
 from basic.models.media import VideoResult
 from backend.decorators import parse_header
 
+
+@permission_classes((AllowAny,))
 class UploadViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
     
@@ -32,6 +35,7 @@ class UploadViewSet(viewsets.ViewSet):
         revisitation = float(data.get('revisitation', 0))
         loudness = float(data.get('loudness', 0))
         device = str(data.get('device', 'unknown'))
+        survey = data.get('survey')
         
         if not video:
             return Response({"message": "Video is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -42,6 +46,7 @@ class UploadViewSet(viewsets.ViewSet):
             loudness=loudness,
             device=device,
             user=user,
+            survey=survey,
         )
         video_result.status = 'uploaded'
         video_result.save()

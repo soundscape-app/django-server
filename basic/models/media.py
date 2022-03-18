@@ -33,6 +33,8 @@ class VideoResult(TimeStampedModel):
     prediction = models.FloatField(default=None, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     
+    survey = models.JSONField(default=None, null=True)
+    
     # @property
     # def json_dict(self):
     #     return json.loads(self.json_data)

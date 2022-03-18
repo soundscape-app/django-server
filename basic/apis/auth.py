@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.utils import timezone
 
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
@@ -8,13 +9,14 @@ from rest_framework.decorators import action, authentication_classes, permission
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
 
 from basic.utils.validator import is_valid_password
 
 @permission_classes((AllowAny,))
 class AuthViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
-
+    
     @action(detail=False, methods=['POST'])
     def register(self, request, *args, **kwargs):
         """회원가입"""
@@ -34,6 +36,8 @@ class AuthViewSet(viewsets.ViewSet):
                 profile = auth.authenticate(request, username=username, password=password)
                 if profile is not None:
                     token, created = Token.objects.get_or_create(user=profile)
+                    user.last_login = timezone.now()
+                    user.save(update_fields=['last_login'])
                     return Response(headers={ 'token': str(token) }, status=status.HTTP_200_OK)
                 else:
                     return Response({ 'details': "Can't create user." }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -47,9 +51,11 @@ class AuthViewSet(viewsets.ViewSet):
         password = request.data.get('password', None)
 
         if username and password:
-            profile = auth.authenticate(request, username=username, password=password)
-            if profile is not None:
-                token, created = Token.objects.get_or_create(user=profile)
+            user = auth.authenticate(request, username=username, password=password)
+            if user is not None:
+                token, created = Token.objects.get_or_create(user=user)
+                user.last_login = timezone.now()
+                user.save(update_fields=['last_login'])
                 return Response(headers={ 'token': str(token) }, status=status.HTTP_200_OK)
             else:
                 return Response({ 'details': "Invalid Username or Password" }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

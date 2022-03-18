@@ -15,7 +15,7 @@ def parse_header():
             
             print('access_token:', access_token)
             print('device_info:', device_info)
-
+            
             request.user = None
             if access_token:
                 # data = auth.decode_jwt(access_token)
@@ -25,6 +25,7 @@ def parse_header():
                 token_obj = Token.objects.filter(key=access_token).first()
                 if token_obj:
                     request.user = token_obj.user
+                    print('request.user:', request.user)
 
             if device_info:
                 device_info = device_info.split(';')

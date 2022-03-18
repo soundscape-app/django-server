@@ -1,7 +1,8 @@
 import logging
 from datetime import datetime, timedelta
 
-from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action, authentication_classes, permission_classes
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -16,6 +17,8 @@ import requests
 import json
 import math
 
+
+@permission_classes((AllowAny,))
 class ResultViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
     
@@ -27,6 +30,9 @@ class ResultViewSet(viewsets.ViewSet):
         if request.user:
             user = request.user
         
+        
+        
+        
         # try:
         #     style_collection = CollectionMirror.objects.get(id=reketer_style_id)
         #     data = reketer_style_serializer(
@@ -36,6 +42,19 @@ class ResultViewSet(viewsets.ViewSet):
         #     return Response(data, status=status.HTTP_200_OK)
         # except CollectionMirror.DoesNotExist:
         #     return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+    @method_decorator(parse_header())
+    def list(self, request, *args, **kwargs):
+        user = None
+        if request.user:
+            user = request.user
+        
+        videos = VideoResult.objects.filter(user=user).order_by('-created_datetime')
+        results = []
+        for video in videos:
+            results.append(result_serializer(video))
+        return Response(results, status=status.HTTP_200_OK)
         
 
     @action(detail=False, methods=['GET'])
