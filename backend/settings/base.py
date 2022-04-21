@@ -91,9 +91,9 @@ JWT_AUTH = {
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
 }
 
-# CORS_ORIGIN_ALLOW_ALL = True
-
-CSRF_TRUSTED_ORIGINS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+# CSRF_TRUSTED_ORIGINS = ['*']
+# ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'backend.urls'
 
