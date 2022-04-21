@@ -19,13 +19,21 @@ def proc(audio):
 
 class UploadViewSet(viewsets.ViewSet):
     http_method_names = ["post", "get"]
+    
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['POST'])
     def audio(self, request):
         data = request.data
         
         audio = data.get('audio')
-        result = proc(audio)
+        
+        print(type(audio))
+        
+        result = { "message": "ok" }
+        
+        # result = proc(audio)
         
         
         # revisitation = float(data.get('revisitation', 0))

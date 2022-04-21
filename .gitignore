@@ -8,6 +8,7 @@ venv/
 .env
 static/
 media/videos/
+media/audios/
 
 *.jks
 *.p8

@@ -1,6 +1,8 @@
 import logging
 from datetime import datetime, timedelta
 import json
+import time
+import wave
 
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, authentication_classes, permission_classes
@@ -9,9 +11,29 @@ from django.utils.decorators import method_decorator
 from rest_framework import viewsets, status
 
 from basic.models.prediction import Prediction
-from basic.models.media import VideoResult
+from basic.models.media import VideoResult, Audio
 from backend.decorators import parse_header
 
+# utils
+
+def get_duration(audio_path):
+    return 0
+    
+    audio = wave.open(audio_path, 'r')
+    frames = audio.getnframes()
+    rate = audio.getframerate()
+    duration = frames / float(rate)
+    return duration
+
+
+def handle_uploaded_file(f, prefix):
+    filename = f'audios/{prefix}_{int(time.time())}.wav'
+    audio_path = 'media/'+filename
+    with open(audio_path, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+    duration = get_duration(audio_path)
+    return filename, duration
 
 @permission_classes((AllowAny,))
 class UploadViewSet(viewsets.ViewSet):
@@ -64,3 +86,15 @@ class UploadViewSet(viewsets.ViewSet):
         res['uploaded_at'] = video_result.created_datetime
 
         return Response(res, status=status.HTTP_200_OK)
+    
+    
+    @action(detail=False, methods=['POST'])
+    def audio(self, request):
+        data = request.data
+        audio = data.get('audio')
+        
+        file_name, duration = handle_uploaded_file(audio, prefix='cough')
+        Audio.objects.create(wav_file=file_name) #, duration=duration)
+            
+        result = { "message": "ok", "file": file_name }
+        return Response(result, status=status.HTTP_200_OK)

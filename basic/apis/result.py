@@ -30,7 +30,7 @@ class ResultViewSet(viewsets.ViewSet):
         if request.user:
             user = request.user
             
-        video = VideoResult.objects.filter(video_id=video_id).first()
+        video = VideoResult.objects.filter(video_id=video_id, user=user).first()
         if not video:
             return Response({"message": "Video is not found"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -43,12 +43,8 @@ class ResultViewSet(viewsets.ViewSet):
         if request.user:
             user = request.user
         
-        videos = VideoResult.objects.filter(user_id=user.id).order_by('-created_datetime')
-        
-        obj = VideoResult.objects.get(id=64)
-        obj.user = user
-        obj.save()
-        
+        videos = VideoResult.objects.filter(user=user).order_by('-created_datetime')
+
         results = []
         for video in videos:
             results.append(result_serializer(video))
