@@ -93,6 +93,8 @@ JWT_AUTH = {
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
+CSRF_TRUSTED_ORIGINS = ['*']
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
