@@ -17,9 +17,12 @@ from backend.decorators import parse_header
 # utils
 
 def get_duration(audio_path):
-    f = sf.SoundFile(audio_path)
-    duration = f.frames / f.samplerate
-    return duration
+    try:
+        f = sf.SoundFile(audio_path)
+        duration = f.frames / f.samplerate
+        return duration
+    except Exception as e:
+        return None
 
 def handle_uploaded_file(f, prefix):
     filename = f'audios/{prefix}_{int(time.time())}.wav'
