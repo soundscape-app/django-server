@@ -6,6 +6,7 @@ from django.conf import settings
 from django.utils.html import format_html
 from django.contrib.admin.utils import flatten_fieldsets
 from django.db.models import F, Subquery, OuterRef, Count
+from django.utils.safestring import mark_safe
 
 # from mirror.models import (
 #     ProductMirror,
@@ -32,6 +33,11 @@ class AudioAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(AudioAdmin, self).get_queryset(request)
         return qs
+
+    def fieldname_download(self, obj):
+        return mark_safe(f'<a href="/media/{obj.wav_file}" download>download</a>')
+
+    fieldname_download.short_description = 'Download'
 
     # def get_readonly_fields(self, request, obj=None):
     #     if request.user.is_superuser:
@@ -101,7 +107,7 @@ class AudioAdmin(admin.ModelAdmin):
     # list_per_page = 20
     
     list_display = [
-        'audio_id', 'wav_file', 'title', 'duration', 'created_datetime', 'updated_datetime',
+        'audio_id', 'wav_file', 'fieldname_download', 'title', 'duration', 'created_datetime', 'updated_datetime',
     ]
 
     # list_filter = [
