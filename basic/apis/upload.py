@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timedelta
 import json
 import time
-import wave
+import soundfile as sf
 
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, authentication_classes, permission_classes
@@ -17,14 +17,9 @@ from backend.decorators import parse_header
 # utils
 
 def get_duration(audio_path):
-    return 0
-    
-    audio = wave.open(audio_path, 'r')
-    frames = audio.getnframes()
-    rate = audio.getframerate()
-    duration = frames / float(rate)
+    f = sf.SoundFile(audio_path)
+    duration = f.frames / f.samplerate
     return duration
-
 
 def handle_uploaded_file(f, prefix):
     filename = f'audios/{prefix}_{int(time.time())}.wav'
@@ -94,7 +89,7 @@ class UploadViewSet(viewsets.ViewSet):
         audio = data.get('audio')
         
         file_name, duration = handle_uploaded_file(audio, prefix='cough')
-        Audio.objects.create(wav_file=file_name) #, duration=duration)
+        Audio.objects.create(wav_file=file_name, duration=duration)
             
         result = { "message": "ok", "file": file_name }
         return Response(result, status=status.HTTP_200_OK)

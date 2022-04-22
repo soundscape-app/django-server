@@ -8,6 +8,8 @@ from django.contrib.admin.utils import flatten_fieldsets
 from django.db.models import F, Subquery, OuterRef, Count
 from django.utils.safestring import mark_safe
 
+import time
+
 # from mirror.models import (
 #     ProductMirror,
 #     Audio,
@@ -38,6 +40,13 @@ class AudioAdmin(admin.ModelAdmin):
         return mark_safe(f'<a href="/media/{obj.wav_file}" download>download</a>')
 
     fieldname_download.short_description = 'Download'
+    
+    def duration_formatted(self, obj):
+        if obj.duration is None: 
+            return None
+        return time.strftime('%H:%M:%S', time.gmtime(obj.duration))
+
+    duration_formatted.short_description = 'duration'
 
     # def get_readonly_fields(self, request, obj=None):
     #     if request.user.is_superuser:
@@ -107,7 +116,7 @@ class AudioAdmin(admin.ModelAdmin):
     # list_per_page = 20
     
     list_display = [
-        'audio_id', 'wav_file', 'fieldname_download', 'title', 'duration', 'created_datetime', 'updated_datetime',
+        'audio_id', 'wav_file', 'fieldname_download', 'title', 'duration_formatted', 'created_datetime', 'updated_datetime',
     ]
 
     # list_filter = [
