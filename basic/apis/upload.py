@@ -94,7 +94,7 @@ class UploadViewSet(viewsets.ViewSet):
         
         file_name, duration = handle_uploaded_file(audio, prefix='cough')
         obj = Audio.objects.create(wav_file=file_name, duration=duration)
-        obj.survey = survey
+        obj.survey = json.loads(survey)
         obj.save()
         
         result = { "message": "ok", "file": file_name }
