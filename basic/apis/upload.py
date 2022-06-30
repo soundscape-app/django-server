@@ -90,9 +90,12 @@ class UploadViewSet(viewsets.ViewSet):
     def audio(self, request):
         data = request.data
         audio = data.get('audio')
+        survey = data.get('survey')
         
         file_name, duration = handle_uploaded_file(audio, prefix='cough')
-        Audio.objects.create(wav_file=file_name, duration=duration)
-            
+        obj = Audio.objects.create(wav_file=file_name, duration=duration)
+        obj.survey = survey
+        obj.save()
+        
         result = { "message": "ok", "file": file_name }
         return Response(result, status=status.HTTP_200_OK)

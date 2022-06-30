@@ -17,8 +17,6 @@ import requests
 import json
 import math
 
-# def get_prediction_data(video):
-
 def proc(video):
     URL = 'http://api-server-1507785389.ap-northeast-2.elb.amazonaws.com:4040/process'
     response = requests.post(URL, files={'video': video.video.file})
@@ -152,51 +150,21 @@ class ProcessViewSet(viewsets.ViewSet):
         data['revisitation'] = video.revisitation
         
         video.prediction = predict(data)
-        video.status = 'processed';
+        video.status = 'processed'
         video.save()
-        
-        # results = dict()
-        # results['video_id'] = video.video_id
-        # results['prediction'] = video.prediction
-        # results['revisitation'] = video.revisitation
-        # results['loudness'] = video.loudness
-        # results['video_data'] = proc_data
-        # results['uploaded_at'] = video.created_datetime
-        # results['predicted_at'] = video.updated_datetime
         
         results = result_serializer(video)
 
         return Response(results, status=status.HTTP_200_OK)
 
-    # @method_decorator(parse_header())
-    # @action(detail=False, methods=['GET'])
+    @method_decorator(parse_header())
     def list(self, request, *args, **kwargs):
         """모든 예측 영상 항목을 가져옵니다 TODO: 유저 별 구분 필요"""
-        # clayful_customer_id = None
-        # if request.customer:
-        #     clayful_customer_id = request.customer.clayful_customer_id
-
-        # page_size = int(request.query_params.get('page_size', 50))
-        # keyword = request.query_params.get('keyword', None)
-        
-        # request.query_params.get('redo', False)
-
-        # queryset = VideoResult.objects.filter(
-        #     uploaded_by=request.user
-        # )
-        
         queryset = VideoResult.objects.filter(
             created_datetime__gte=datetime.now() - timedelta(hours=12),
             video__isnull=False
         )
         
-        # if keyword:
-        #     keyword = keyword.lower()
-        #     queryset = queryset.filter(search_text__contains=keyword)
-
-        # queryset = queryset.order_by('-created_datetime')
-        # queryset = queryset[:page_size]
-
         results = []
         for video in queryset:
             data = result_serializer(video)

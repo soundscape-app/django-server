@@ -5,18 +5,18 @@ services:
       context: .
       dockerfile: ./docker/django/Dockerfile
     platform: linux/amd64
-    # command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
-    command: > 
-      bash -c "python3 manage.py makemigrations
-      && python3 manage.py migrate   
-      && python3 manage.py collectstatic --noinput
-      && gunicorn backend.wsgi:application -b 0.0.0.0:80 "
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    # command: > 
+    #   bash -c "python3 manage.py makemigrations
+    #   && python3 manage.py migrate   
+    #   && python3 manage.py collectstatic --noinput
+    #   && gunicorn backend.wsgi:application -b 0.0.0.0:80 "
     volumes:
       - .:/code
     # expose:
     #   - "8000"
     ports:
-      - "80:80"
+      - "8000:80"
     restart: "on-failure"
   # nginx:
   #   # build: ./docker/nginx

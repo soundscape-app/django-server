@@ -41,3 +41,4 @@ class Audio(TimeStampedModel):
         validators=[FileExtensionValidator(allowed_extensions=['wav'])]
     )
     duration = models.FloatField(blank=True, null=True)
+    survey = models.JSONField(null=True)

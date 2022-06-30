@@ -178,7 +178,6 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # STATIC_ROOT = ''
 
@@ -192,3 +191,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # 각 media file에 대한 URL prefix
 MEDIA_URL = '/media/'
+
+# 대용량 파일 저장용
+S3_PUBLIC_BUCKET_NAME = get_env_variable('S3_PUBLIC_BUCKET_NAME')
+S3_PUBLIC_BUCKET_ACCESS_KEY = get_env_variable('S3_PUBLIC_BUCKET_ACCESS_KEY')
+S3_PUBLIC_BUCKET_SECRET_KEY = get_env_variable('S3_PUBLIC_BUCKET_SECRET_KEY')
