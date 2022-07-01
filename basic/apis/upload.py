@@ -1,10 +1,10 @@
-import logging
-from datetime import datetime, timedelta
-import json
+import re
 import time
-import soundfile as sf
-from scipy import io
+import json
 import numpy as np
+from scipy import io
+import soundfile as sf
+from pydub import AudioSegment
 
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, authentication_classes, permission_classes
@@ -29,9 +29,17 @@ def get_duration(audio_path):
 def handle_uploaded_file(f, prefix):
     filename = f'audios/{prefix}_{int(time.time())}.wav'
     audio_path = 'media/'+filename
-    with open(audio_path, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
+    if str(f).endswith('.m4a'):
+        track = AudioSegment.from_file(f, format='m4a')
+        print(audio_path)
+        file_handle = track.export(audio_path, format='wav')
+    elif str(f).endswith('.wav'):
+        with open(audio_path, 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+    else:
+        raise Exception('File type is not supported')
+
     duration = get_duration(audio_path)
     return filename, duration
 
@@ -116,6 +124,8 @@ class UploadViewSet(viewsets.ViewSet):
         audio = data.get('audio')
         survey = data.get('survey')
         
+        print(audio)
+        
         file_name, duration = handle_uploaded_file(audio, prefix='cough')
         obj = Audio.objects.create(wav_file=file_name, duration=duration)
         obj.survey = json.loads(survey)
@@ -123,4 +133,5 @@ class UploadViewSet(viewsets.ViewSet):
         obj.save()
         
         result = { "message": "ok", "file": file_name, "audio_id": obj.audio_id, 'result': obj.result }
+        print(result)
         return Response(result, status=status.HTTP_200_OK)
