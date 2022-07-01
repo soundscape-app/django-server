@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 import json
 import time
 import soundfile as sf
+from scipy import io
+import numpy as np
 
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, authentication_classes, permission_classes
@@ -19,7 +21,7 @@ from backend.decorators import parse_header
 def get_duration(audio_path):
     try:
         f = sf.SoundFile(audio_path)
-        duration = f.frames / f.samplerate
+        duration = round(f.frames / f.samplerate, 2)
         return duration
     except Exception as e:
         return None
@@ -32,6 +34,28 @@ def handle_uploaded_file(f, prefix):
             destination.write(chunk)
     duration = get_duration(audio_path)
     return filename, duration
+
+def get_result(file_name):
+    rate, data = io.wavfile.read(f'media/{file_name}')
+    sum_amp = np.sum(data)
+    
+    value_pn = int(sum_amp / 111)
+    value_sn = int(sum_amp / 223)
+    value_br = int(sum_amp / 389)
+    value_others = int(sum_amp / 599)
+    
+    value_sum = value_pn + value_sn + value_br + value_others
+    rate_pn = round(value_pn / value_sum, 2)
+    rate_sn = round(value_sn / value_sum, 2)
+    rate_br = round(value_br / value_sum, 2)
+    rate_others = round(value_others / value_sum, 2)
+    
+    return {
+        'rate_pn': rate_pn,
+        'rate_sn': rate_sn,
+        'rate_br': rate_br,
+        'rate_others': rate_others,
+    }
 
 @permission_classes((AllowAny,))
 class UploadViewSet(viewsets.ViewSet):
@@ -95,7 +119,8 @@ class UploadViewSet(viewsets.ViewSet):
         file_name, duration = handle_uploaded_file(audio, prefix='cough')
         obj = Audio.objects.create(wav_file=file_name, duration=duration)
         obj.survey = json.loads(survey)
+        obj.result = get_result(file_name)
         obj.save()
         
-        result = { "message": "ok", "file": file_name }
+        result = { "message": "ok", "file": file_name, "audio_id": obj.audio_id, 'result': obj.result }
         return Response(result, status=status.HTTP_200_OK)

@@ -42,3 +42,4 @@ class Audio(TimeStampedModel):
     )
     duration = models.FloatField(blank=True, null=True)
     survey = models.JSONField(null=True)
+    result = models.JSONField(null=True)
