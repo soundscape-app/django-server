@@ -58,12 +58,18 @@ def get_rates(file_name):
     rate_br = round(value_br / value_sum, 2)
     rate_others = round(value_others / value_sum, 2)
     
-    return [
+    rates = [
         {'name': '폐렴', 'rate': rate_pn, 'color': '#D88024'},
         {'name': '부비동염', 'rate': rate_sn, 'color': '#D84C6F'},
         {'name': '기관지염', 'rate': rate_br, 'color': '#774AEF'},
         {'name': '기타', 'rate': rate_others, 'color': '#1767D2'},
     ]
+    highest = max(rates, key=lambda x: x['rate'])
+    
+    return {
+        'rates': rates,
+        'highest': highest,
+    }
 
 @permission_classes((AllowAny,))
 class UploadViewSet(viewsets.ViewSet):
@@ -129,7 +135,7 @@ class UploadViewSet(viewsets.ViewSet):
         file_name, duration = handle_uploaded_file(audio, prefix='cough')
         obj = Audio.objects.create(wav_file=file_name, duration=duration)
         obj.survey = json.loads(survey)
-        obj.result = { 'rates': get_rates(file_name) }
+        obj.result = get_rates(file_name)
         obj.save()
         
         result = { "message": "ok", "file": file_name, "audio_id": obj.audio_id, 'result': obj.result }
