@@ -47,10 +47,10 @@ def get_rates(file_name):
     rate, data = io.wavfile.read(f'media/{file_name}')
     sum_amp = np.sum(data)
     
-    value_pn = int(sum_amp / 111)
-    value_sn = int(sum_amp / 223)
-    value_br = int(sum_amp / 389)
-    value_others = int(sum_amp / 599)
+    value_pn = (sum_amp / 111) % 1
+    value_sn = (sum_amp / 223) % 1
+    value_br = (sum_amp / 389) % 1
+    value_others = (sum_amp / 599) % 1
     
     value_sum = value_pn + value_sn + value_br + value_others
     rate_pn = round(value_pn / value_sum, 2)
