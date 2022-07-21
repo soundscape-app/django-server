@@ -6,6 +6,9 @@ from scipy import io
 import soundfile as sf
 from pydub import AudioSegment
 
+# import tflite_runtime.interpreter as tflite
+import tensorflow as tf
+
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, authentication_classes, permission_classes
 from rest_framework.response import Response
@@ -43,6 +46,9 @@ def handle_uploaded_file(f, prefix):
     duration = get_duration(audio_path)
     return filename, duration
 
+def test():
+    interpreter = tf.lite.Interpreter(model_path="./soundclassifier_with_metadata.tflite")
+
 def get_rates(file_name):
     rate, data = io.wavfile.read(f'media/{file_name}')
     sum_amp = np.sum(data)
@@ -51,6 +57,8 @@ def get_rates(file_name):
     value_sn = (sum_amp / 223) % 1
     value_br = (sum_amp / 389) % 1
     value_others = (sum_amp / 599) % 1
+    
+    # qweqwe
     
     value_sum = value_pn + value_sn + value_br + value_others
     rate_pn = round(value_pn / value_sum, 2)
