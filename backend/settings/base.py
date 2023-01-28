@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'basic.apps.BasicConfig',
     'cough.apps.CoughConfig',
     # 'storages',
+    'rest_framework',
     'rest_framework.authtoken',
 ]
 

@@ -8,6 +8,7 @@ nohup.out
 venv/
 .env
 static/
+media
 media/videos/
 media/audios/
 

@@ -20,6 +20,7 @@ from basic.apis.auth import AuthViewSet
 from basic.apis.user import UserViewSet
 from basic.apis.cough import CoughUploadViewSet
 from basic.apis.result import ResultViewSet
+from basic.apis.dwt_filter import WaveletTransformView
 
 # from backend.apis.auth import AuthLoginAPI
 
@@ -36,6 +37,7 @@ router.register('result', ResultViewSet, basename='result')
 # router.register('api/search', SearchViewSet, basename='search')
 
 urlpatterns = [
+    path('api/dwt-filter', WaveletTransformView.as_view()),
     # path('auth', AuthViewSet.as_view()),
     # path('auth/refresh', token_refresh),
     # path('auth/register', auth_register),
