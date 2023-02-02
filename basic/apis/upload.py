@@ -1,5 +1,7 @@
 import re
 import time
+import requests
+import base64
 import json
 import numpy as np
 from scipy import io
@@ -48,6 +50,24 @@ def handle_uploaded_file(f, prefix):
 
 def test():
     interpreter = tf.lite.Interpreter(model_path="./soundclassifier_with_metadata.tflite")
+
+def get_result_from_model(file_name):
+    data_file = open(f'media/{file_name}', 'rb').read()
+    data_file = base64.b64encode(data_file).decode('utf-8')
+    prefix ="data:audio/wav;base64,"
+    data_file = prefix + data_file
+    response = requests.post(url="http://hyusl.kro.kr:7860/run/detection", json={
+        "data": [
+            {"name":file_name,"data":data_file},
+            2.5,
+            15,
+            0.5,
+            False,
+        ]}).json()
+
+    data = response["data"]
+
+    return data
 
 def get_rates(file_name):
     rate, data = io.wavfile.read(f'media/{file_name}')
@@ -149,3 +169,19 @@ class UploadViewSet(viewsets.ViewSet):
         result = { "message": "ok", "file": file_name, "audio_id": obj.audio_id, 'result': obj.result }
         print(result)
         return Response(result, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['POST'])
+    def audio_detect_cough(self, request):
+        data = request.data
+        audio = data.get('audio')
+        survey = data.get('survey')
+
+        file_name, duration = handle_uploaded_file(audio, prefix='cough_detect')
+        obj = Audio.objects.create(wav_file=file_name, duration=duration)
+        obj.survey = json.loads(survey)
+        obj.result = get_result_from_model(file_name)
+        obj.save()
+
+        result = { "message": "ok", "file": file_name, "audio_id": obj.audio_id, 'result': obj.result }
+        return Response(result, status=status.HTTP_200_OK)
+
