@@ -9,7 +9,7 @@ import soundfile as sf
 from pydub import AudioSegment
 
 # import tflite_runtime.interpreter as tflite
-import tensorflow as tf
+# import tensorflow as tf
 
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, authentication_classes, permission_classes
@@ -54,19 +54,18 @@ def test():
 def get_result_from_model(file_name):
     data_file = open(f'media/{file_name}', 'rb').read()
     data_file = base64.b64encode(data_file).decode('utf-8')
-    prefix ="data:audio/wav;base64,"
-    data_file = prefix + data_file
-    response = requests.post(url="http://hyusl.kro.kr:7860/run/detection", json={
-        "data": [
-            {"name":file_name,"data":data_file},
-            2.5,
-            15,
-            0.5,
-            False,
-        ]}).json()
 
-    data = response["data"]
+    response = requests.post(url="http://hyusl.kro.kr:8000/detect", json={
+        "audio": data_file,
+        "interval": 2.5,
+        "standard": 15,
+        "threshold": 0.5,
+        "denoise": True,
+        "return_image": True,
+    }).json()
 
+    data = response
+    
     return data
 
 def get_rates(file_name):

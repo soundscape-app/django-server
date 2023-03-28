@@ -13,13 +13,17 @@ from basic.models.media import VideoResult
 from basic.utils.result_serializer import result_serializer
 from backend.decorators import parse_header
 
+import io
 import requests
 import json
 import math
 
 def proc(video):
-    URL = 'http://api-server-1507785389.ap-northeast-2.elb.amazonaws.com:4040/process'
-    response = requests.post(URL, files={'video': video.video.file})
+    URL = 'http://hyusl.kro.kr:4040/process'
+    file_path = 'media/' + str(video.video)
+    with open(file_path, "rb") as f:
+        frame = f.read()
+    response = requests.post(URL, files={'video': io.BytesIO(frame)})
     res = json.loads(''.join(response.content.decode('utf-8')))
     return res
 
@@ -107,6 +111,8 @@ class ProcessViewSet(viewsets.ViewSet):
         
         # Divice
         data['device'] = video.device
+
+        print(proc_data)
        
        # TODO:
         if video.device and video.device.startswith('Apple'):
